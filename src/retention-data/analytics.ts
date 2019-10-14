@@ -1,6 +1,6 @@
 import * as applicationinsights from 'applicationinsights';
 
-const instrumentationKey = process.env.INSTRUMENTATION_KEY!; // eslint-disable-line no-process-env
+const instrumentationKey = process.env.RESULT_INSTRUMENTATION_KEY!; // eslint-disable-line no-process-env
 
 applicationinsights.setup(instrumentationKey).start();
 

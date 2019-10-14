@@ -4,7 +4,7 @@ import { delay } from './utils';
 import { AIResponseQuery } from './types';
 
 const request = r.defaults({
-    headers: { 'x-api-key': process.env['X-API-KEY'] }, // eslint-disable-line no-process-env
+    headers: { 'x-api-key': process.env.X_API_KEY }, // eslint-disable-line no-process-env
     json: true
 });
 
