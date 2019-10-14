@@ -1,0 +1,20 @@
+# Coverage directory used by tools like istanbul
+coverage
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+node_modules/
+
+# Optional eslint cache
+.eslintcache
+
+# TypeScript output
+dist
+
+# Azure Functions artifacts
+bin
+obj
+appsettings.json
+local.settings.json

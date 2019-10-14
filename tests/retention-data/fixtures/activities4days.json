@@ -1,0 +1,45 @@
+{
+    "tables": [
+        {
+            "columns": [
+                {
+                    "name": "customDimensions",
+                    "type": "dynamic"
+                }
+            ],
+            "name": "PrimaryResult",
+            "rows": [
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1111\",\"lastUpdated\":\"2019-10-07T07:00:00.697Z\"}"
+                ],
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1111\",\"lastUpdated\":\"2019-10-07T07:00:00.700Z\"}"
+                ],
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1011\",\"lastUpdated\":\"2019-10-07T07:00:00.700Z\"}"
+                ],
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1111\",\"lastUpdated\":\"2019-10-08T07:00:00.700Z\"}"
+                ],
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1111\",\"lastUpdated\":\"2019-10-08T07:00:00.700Z\"}"
+                ],
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1000\",\"lastUpdated\":\"2019-10-08T07:00:00.700Z\"}"
+                ],
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1001\",\"lastUpdated\":\"2019-10-09T07:00:00.700Z\"}"
+                ],
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1010\",\"lastUpdated\":\"2019-10-09T07:00:00.700Z\"}"
+                ],
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1011\",\"lastUpdated\":\"2019-10-10T07:00:00.700Z\"}"
+                ],
+                [
+                    "{\"extension-version\":\"1.0.3\",\"last28Days\":\"1100\",\"lastUpdated\":\"2019-10-10T07:00:00.700Z\"}"
+                ]
+            ]
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "tables": [
+        {
+            "name": "PrimaryResult",
+            "columns": [
+                {
+                    "name": "customDimensions",
+                    "type": "dynamic"
+                }
+            ],
+            "rows": []
+        }
+    ]
+}
