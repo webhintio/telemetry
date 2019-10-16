@@ -35,7 +35,7 @@ const retentionData: AzureFunction = async function (context: Context, myTimer: 
         }
     }
 
-    if (!dates) {
+    if (dates.length === 0) {
         context.log('No data to update.');
 
         return;
@@ -48,7 +48,6 @@ const retentionData: AzureFunction = async function (context: Context, myTimer: 
     for (const [date, activities] of activitiesByDate) {
         const retentionData = getRetentionData(activities, date);
 
-        console.log(retentionData);
         trackEvent('f12-retention', retentionData);
     }
 
@@ -56,5 +55,3 @@ const retentionData: AzureFunction = async function (context: Context, myTimer: 
 };
 
 export default retentionData;
-
-retentionData({ log: console.log } as any, { IsPastDue: false });

@@ -16,8 +16,8 @@ steps:
   displayName: 'Install dependencies'
 - script: npm run test
   displayName: 'Build and run tests'
-- script: |
-    npm prune --production
+# Remove devDependency before deploy to not upload them
+- script: npm prune --production
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: 'Remove devDependencies'
 - task: ArchiveFiles@2

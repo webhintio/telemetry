@@ -12,7 +12,7 @@ const retentionResponse: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(
 const retentionEmptyResponse: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'retention-empty.json'), 'utf-8')); // eslint-disable-line no-sync
 
 type Request = {
-    getWithRetry: (url: string) => Promise<AIResponseQuery>;
+    get: (url: string) => Promise<AIResponseQuery>;
 }
 
 type APIContext = {
@@ -30,7 +30,7 @@ test.beforeEach((t) => {
     t.context.sandbox = sinon.createSandbox();
 
     t.context.request = {
-        getWithRetry(url: string) {
+        get(url: string) {
             return null as any;
         }
     };
@@ -41,12 +41,13 @@ test.afterEach((t) => {
 });
 
 const queryTemplate = `query=customEvents | where name == 'f12-activity' and todatetime(customDimensions["lastUpdated"]) >= todatetime('%%startDate%%') and todatetime(customDimensions["lastUpdated"]) < todatetime('%%endDate%%') | project customDimensions`;
+const daysToProcess = 28;
 
 const getExpectedQueries = (date: Date) => {
     const initialDateString = getISODateString(date.getTime());
     const result: string[] = [];
 
-    for (let i = 0; i < 28; i++) {
+    for (let i = 0; i < daysToProcess; i++) {
         const endDate = new Date(initialDateString);
 
         endDate.setUTCDate(endDate.getUTCDate() - i);
@@ -69,7 +70,7 @@ const getExpectedQueries = (date: Date) => {
 };
 
 test(`'getActivities' will request the data day by day`, async (t) => {
-    const requestGetWithRetryStub = sinon.stub(t.context.request, 'getWithRetry').resolves(activitiesResponse);
+    const requestGetStub = sinon.stub(t.context.request, 'get').resolves(activitiesResponse);
 
     const { getActivities } = loadScript(t.context);
 
@@ -78,12 +79,12 @@ test(`'getActivities' will request the data day by day`, async (t) => {
     await getActivities(now);
 
     const expectedQueries = getExpectedQueries(now);
-    const actualQueries = requestGetWithRetryStub.args.map((arg) => {
+    const actualQueries = requestGetStub.args.map((arg) => {
         return arg[0]!.split('?')[1];
     });
 
     t.plan(29);
-    t.is(requestGetWithRetryStub.callCount, 28);
+    t.is(requestGetStub.callCount, daysToProcess);
 
     expectedQueries.forEach((query) => {
         t.true(actualQueries.includes(query));
@@ -91,7 +92,7 @@ test(`'getActivities' will request the data day by day`, async (t) => {
 });
 
 test(`'getLatestRetention' will return null if there is no data in App Insight`, async (t) => {
-    sinon.stub(t.context.request, 'getWithRetry').resolves(retentionEmptyResponse);
+    sinon.stub(t.context.request, 'get').resolves(retentionEmptyResponse);
 
     const { getLatestRetention } = loadScript(t.context);
 
@@ -103,7 +104,7 @@ test(`'getLatestRetention' will return null if there is no data in App Insight`,
 });
 
 test(`'getLatestRetention' will request the data in just one query`, async (t) => {
-    const requestGetWithRetryStub = sinon.stub(t.context.request, 'getWithRetry').resolves(retentionResponse);
+    const requestGetStub = sinon.stub(t.context.request, 'get').resolves(retentionResponse);
 
     const { getLatestRetention } = loadScript(t.context);
 
@@ -111,5 +112,5 @@ test(`'getLatestRetention' will request the data in just one query`, async (t) =
 
     await getLatestRetention(now);
 
-    t.true(requestGetWithRetryStub.calledOnce);
+    t.true(requestGetStub.calledOnce);
 });

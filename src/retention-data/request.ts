@@ -1,35 +1,19 @@
-import * as r from 'request';
+import * as got from 'got';
 
-import { delay } from './utils';
 import { AIResponseQuery } from './types';
 
-const request = r.defaults({
+const client = got.extend({
     headers: { 'x-api-key': process.env.X_API_KEY }, // eslint-disable-line no-process-env
-    json: true
+    json: true,
+    retry: { retries: 5 }
 });
 
-export const getWithRetry = (endpoint: string, delayInMS: number = 5000): Promise<AIResponseQuery> => {
-    let retries = 3;
+/**
+ * Make a request to an endpoint. If it fails, it retries up to 3 times.
+ * @param {string} endpoint - Endpoint to request.
+ */
+export const get = async (endpoint: string): Promise<AIResponseQuery> => {
+    const response = await client.get(endpoint);
 
-    return new Promise((resolve, rejects) => {
-        const get = () => {
-            request.get(endpoint, async (error, res) => {
-                if (error || typeof res.body === 'string') {
-                    if (retries === 0) {
-                        return rejects(error ? error : new Error(`Error getting data from: ${endpoint}`));
-                    }
-
-                    retries--;
-
-                    await delay(delayInMS);
-
-                    return get();
-                }
-
-                return resolve(res.body);
-            });
-        };
-
-        return get();
-    });
+    return response.body as AIResponseQuery;
 };

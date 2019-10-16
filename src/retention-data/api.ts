@@ -1,15 +1,34 @@
-import { getWithRetry } from './request';
+import { get } from './request';
 import { AIResponseQuery, ActivityData, RetentionData } from './types';
 import { getISODateString } from './utils';
 
-const activityEndpointTemplate = `https://api.applicationinsights.io/v1/apps/${process.env.APPID}/query?query=customEvents | where name == 'f12-activity' and todatetime(customDimensions["lastUpdated"]) >= todatetime('%%startDate%%') and todatetime(customDimensions["lastUpdated"]) < todatetime('%%endDate%%') | project customDimensions`; // eslint-disable-line no-process-env
-const retentionEndpoint = `https://api.applicationinsights.io/v1/apps/${process.env.APPID}/query?query=customEvents | where name == 'f12-retention' | sort by todatetime(customDimensions["date"]) desc | project customDimensions | take 1`; // eslint-disable-line no-process-env
+/* eslint-disable no-process-env */
+const activityEndpointTemplate = `https://api.applicationinsights.io/v1/apps/${process.env.APPID}/
+query?query=customEvents
+            | where name == 'f12-activity'
+              and todatetime(customDimensions["lastUpdated"]) >= todatetime('%%startDate%%')
+              and todatetime(customDimensions["lastUpdated"]) < todatetime('%%endDate%%')
+            | project customDimensions`;
+const retentionEndpoint = `https://api.applicationinsights.io/v1/apps/${process.env.APPID}/query? 
+query=customEvents
+      | where name == 'f12-retention'
+      | sort by todatetime(customDimensions["date"]) desc
+      | project customDimensions
+      | take 1`
+    .replace(/\r?\n/gm, '')
+    .replace(/\s{2,}/gm, ' ');
+/* eslint-enable no-process-env */
+const daysToProcess = 28;
 
+/**
+ * Calculate the API endpoints to get the activity entries.
+ * @param {Date} date - Date since we want to get the activity.
+ */
 const getActivityEndpoints = (date: Date) => {
     const initialDateString = getISODateString(date.getTime());
     const result: string[] = [];
 
-    for (let i = 0; i < 28; i++) {
+    for (let i = 0; i < daysToProcess; i++) {
         const endDate = new Date(initialDateString);
 
         endDate.setUTCDate(endDate.getUTCDate() - i);
@@ -23,7 +42,9 @@ const getActivityEndpoints = (date: Date) => {
 
         const activityEndpoint = activityEndpointTemplate
             .replace('%%startDate%%', startDateString)
-            .replace('%%endDate%%', endDateString);
+            .replace('%%endDate%%', endDateString)
+            .replace(/\r?\n/gm, '')
+            .replace(/\s{2,}/gm, ' ');
 
         result.push(activityEndpoint);
     }
@@ -31,12 +52,16 @@ const getActivityEndpoints = (date: Date) => {
     return result;
 };
 
+/**
+ * Return the activities for the last 28 days in Application Insights.
+ * @param {Date} date - Day since we want to get the activities.
+ */
 export const getActivities = async (date: Date): Promise<ActivityData[]> => {
     const result: ActivityData[] = [];
     const activityEndpoints = getActivityEndpoints(date);
 
     const promises: Promise<AIResponseQuery>[] = activityEndpoints.map((activityEndpoint: string) => {
-        return getWithRetry(activityEndpoint);
+        return get(activityEndpoint);
     });
 
     const aiResponses = await Promise.all(promises);
@@ -58,8 +83,11 @@ export const getActivities = async (date: Date): Promise<ActivityData[]> => {
     return result;
 };
 
+/**
+ * Return the lates retention data we have in Application Insights
+ */
 export const getLatestRetention = async (): Promise<RetentionData | null> => {
-    const aiResponse = await getWithRetry(retentionEndpoint);
+    const aiResponse = await get(retentionEndpoint);
     const table = aiResponse.tables[0];
     const customDimensionsIndex = table.columns.findIndex((column) => {
         return column.name === 'customDimensions';
@@ -73,6 +101,7 @@ export const getLatestRetention = async (): Promise<RetentionData | null> => {
 
     const retentionData: RetentionData = JSON.parse(row[customDimensionsIndex]!);
 
+    // `retentionData.date` is already normalized to UTC.
     retentionData.date = new Date(retentionData.date);
 
     return retentionData;

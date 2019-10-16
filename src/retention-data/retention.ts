@@ -1,6 +1,11 @@
 import { ActivityData, RetentionData } from './types';
 import { getISODateString, getDaysBetweenDates } from './utils';
 
+/**
+ * Calculate the redundat activity given an activity.
+ * @param {ActivityData} activity - Current activity.
+ * @param {ActivityData[]} previousActivities - Rest of the activities.
+ */
 const getRedundant = (activity: ActivityData, previousActivities: ActivityData[]): void => {
     const activityDate = activity.lastUpdated;
     let lastRedundantDate = activityDate;
@@ -29,6 +34,11 @@ const getRedundant = (activity: ActivityData, previousActivities: ActivityData[]
     }
 };
 
+/**
+ * Calculate the number of activities that meet the 'atLeast' condition.
+ * @param activities - Activities.
+ * @param atLeast - Minimum number of 1 that the activity should have.
+ */
 const getAtLeast = (activities: ActivityData[], atLeast: number): number => {
     let total = 0;
     const initialDate = activities[0].lastUpdated;
@@ -51,6 +61,11 @@ const getAtLeast = (activities: ActivityData[], atLeast: number): number => {
     return total;
 };
 
+/**
+ * Calculate the retention data given a set of activities.
+ * @param activities - Activities to use as base for the calculation
+ * @param date - Date of the retention data.
+ */
 export const getRetentionData = (activities: ActivityData[], date: Date): RetentionData => {
     const sortedActivities = activities
         .slice()

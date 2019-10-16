@@ -4,18 +4,26 @@ const instrumentationKey = process.env.RESULT_INSTRUMENTATION_KEY!; // eslint-di
 
 applicationinsights.setup(instrumentationKey).start();
 
-const appInisghtClient = applicationinsights.defaultClient;
+const appInsightsClient = applicationinsights.defaultClient;
 
+/**
+ * Send an event to Application Insights.
+ * @param name - Event name.
+ * @param properties - Properties to track.
+ */
 export const trackEvent = (name: string, properties: any = {}) => {
-    appInisghtClient.trackEvent({
+    appInsightsClient.trackEvent({
         name,
         properties
     });
 };
 
+/**
+ * Send the remaining data to Application Insights.
+ */
 export const sendPendingData = () => {
     return new Promise((resolve) => {
-        appInisghtClient.flush({
+        appInsightsClient.flush({
             callback: () => {
                 return resolve();
             }
