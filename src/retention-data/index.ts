@@ -6,11 +6,6 @@ import { getRetentionData } from './retention';
 import { trackEvent, sendPendingData } from './analytics';
 
 const retentionData: AzureFunction = async function (context: Context, myTimer: any): Promise<void> {
-    if (myTimer.IsPastDue) {
-        context.log('Timer function is running late!');
-    }
-
-    // const activitiesByDate = new Map<Date, ActivityData[]>();
     const latestRetention = await getLatestRetention();
     const dates: Date[] = [];
 
@@ -20,6 +15,7 @@ const retentionData: AzureFunction = async function (context: Context, myTimer: 
     } else {
         const delta = getDaysBetweenDates(new Date(getISODateString()), latestRetention.date as Date);
 
+        context.log(`Processing days: ${delta}`);
         // If delta === 0, we already have the retention data for today.
         if (delta !== 0) {
             const today = new Date(getISODateString());

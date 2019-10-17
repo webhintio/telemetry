@@ -149,8 +149,8 @@ test('If the last update was lest than 24 hours ago, it should do nothing', asyn
 
     t.true(apiGetLatestRetentionStub.calledOnce);
     t.true(utilsGetDaysStub.calledOnce);
-    t.true(functionsContextLogSpy.calledOnce);
-    t.is(functionsContextLogSpy.args[0][0], 'No data to update.');
+    t.true(functionsContextLogSpy.calledTwice);
+    t.is(functionsContextLogSpy.args[1][0], 'No data to update.');
     t.false(apiGetActivitiesSpy.called);
     t.false(analyticsTrackEventSpy.called);
 });
@@ -188,7 +188,7 @@ test('If there the last retention data is from two days ago, it should calculate
     await script(t.context.functionContext, t.context.timer);
 
     t.true(utilsGetDaysStub.calledOnce);
-    t.false(functionsContextLogSpy.calledOnce);
+    t.true(functionsContextLogSpy.calledOnce);
     t.true(utilsGetIsoDateStringStub.calledTwice);
     t.true(apiGetActivitiesStub.calledTwice);
     t.deepEqual(apiGetActivitiesStub.args[0][0], today);
