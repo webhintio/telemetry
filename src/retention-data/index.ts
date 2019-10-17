@@ -1,7 +1,6 @@
 import { AzureFunction, Context } from '@azure/functions';
 
 import { getLatestRetention, getActivities } from './api';
-import { ActivityData } from './types';
 import { getDaysBetweenDates, getISODateString } from './utils';
 import { getRetentionData } from './retention';
 import { trackEvent, sendPendingData } from './analytics';
@@ -11,7 +10,7 @@ const retentionData: AzureFunction = async function (context: Context, myTimer: 
         context.log('Timer function is running late!');
     }
 
-    const activitiesByDate = new Map<Date, ActivityData[]>();
+    // const activitiesByDate = new Map<Date, ActivityData[]>();
     const latestRetention = await getLatestRetention();
     const dates: Date[] = [];
 
@@ -41,16 +40,16 @@ const retentionData: AzureFunction = async function (context: Context, myTimer: 
         return;
     }
 
-    for (const date of dates) {
-        activitiesByDate.set(date, await getActivities(date));
-    }
+    const promises = dates.map((date) => {
+        return getActivities(date)
+            .then((activities) => {
+                const retentionData = getRetentionData(activities, date);
 
-    for (const [date, activities] of activitiesByDate) {
-        const retentionData = getRetentionData(activities, date);
+                trackEvent('f12-retention', retentionData);
+            });
+    });
 
-        trackEvent('f12-retention', retentionData);
-    }
-
+    await Promise.all(promises);
     await sendPendingData();
 };
 

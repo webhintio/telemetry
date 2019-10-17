@@ -21,7 +21,7 @@ export const trackEvent = (name: string, properties: any = {}) => {
 /**
  * Send the remaining data to Application Insights.
  */
-export const sendPendingData = () => {
+export const sendPendingData = (): Promise<void> => {
     return new Promise((resolve) => {
         appInsightsClient.flush({
             callback: () => {
