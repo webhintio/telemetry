@@ -9,6 +9,11 @@ import { getRetentionData } from '../../src/retention-data/retention';
 
 const activities28daysRaw: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'activities28days.json'), 'utf-8')); // eslint-disable-line no-sync
 const activities4daysRaw: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'activities4days.json'), 'utf-8')); // eslint-disable-line no-sync
+const activities1111: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'activities1111.json'), 'utf-8')); // eslint-disable-line no-sync
+const activities1000: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'activities1000.json'), 'utf-8')); // eslint-disable-line no-sync
+const activities1010: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'activities1010.json'), 'utf-8')); // eslint-disable-line no-sync
+const activities1001: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'activities1001.json'), 'utf-8')); // eslint-disable-line no-sync
+const activitiesNo2oDay: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'activitiesNo2oDay.json'), 'utf-8')); // eslint-disable-line no-sync
 
 const parseActivities = (activitiesRaw: AIResponseQuery) => {
     const activities: ActivityData[] = activitiesRaw.tables[0].rows.map((row) => {
@@ -55,7 +60,7 @@ const parseActivities = (activitiesRaw: AIResponseQuery) => {
  * 5M 1010000000000000000000000000
  * 5O 1000000000000000000000000000
  */
-test('it should calculate the rigth retention data for 28 days', (t) => {
+test('it should calculate the right retention data for 28 days', (t) => {
     const now = new Date();
 
     const activities = parseActivities(activities28daysRaw);
@@ -77,11 +82,113 @@ test('it should calculate the rigth retention data for 28 days', (t) => {
  * 4A 1011
  * 4B 1100
  */
-test('it should calculate the rigth retention data for 4 days', (t) => {
+test('it should calculate the right retention data for 4 days', (t) => {
     const now = new Date();
     const activities = parseActivities(activities4daysRaw);
     const result = getRetentionData(activities, now);
 
     t.is(result.oneDay, 5);
     t.is(result.twoDays, 4);
+});
+
+/*
+ * 1A 1111 X
+ * 1C 1111 X
+ * 1F 1111 X
+ * 2A 1111 X
+ * 2C 1111 X
+ * 2D 1111
+ * 3B 1111 X
+ * 3F 1111 X
+ * 4A 1111
+ * 4B 1111
+ */
+test('it should calculate the right retention data when all the activity is 1111', (t) => {
+    const now = new Date();
+    const activities = parseActivities(activities1111);
+    const result = getRetentionData(activities, now);
+
+    t.is(result.oneDay, 3);
+    t.is(result.twoDays, 3);
+});
+
+/*
+ * 1A 1000
+ * 1B 1000
+ * 1C 1000
+ * 2D 1000
+ * 2E 1000
+ * 2F 1000
+ * 3G 1000
+ * 3H 1000
+ * 4I 1000
+ * 4J 1000
+ */
+test('it should calculate the right retention data when all the activity is 1000', (t) => {
+    const now = new Date();
+    const activities = parseActivities(activities1000);
+    const result = getRetentionData(activities, now);
+
+    t.is(result.oneDay, 10);
+    t.is(result.twoDays, 0);
+});
+
+/*
+ * 1A 1010 X
+ * 1B 1010 X
+ * 1C 1010
+ * 2D 1010 X
+ * 2E 1010 X
+ * 2F 1010
+ * 3A 1010
+ * 3B 1010
+ * 4D 1010
+ * 4E 1010
+ */
+test('it should calculate the right retention data when all the activity is 1010', (t) => {
+    const now = new Date();
+    const activities = parseActivities(activities1010);
+    const result = getRetentionData(activities, now);
+
+    t.is(result.oneDay, 6);
+    t.is(result.twoDays, 4);
+});
+
+/*
+ * 1A 1001 X
+ * 1B 1001 X
+ * 1C 1001
+ * 2D 1001
+ * 2E 1001
+ * 2F 1001
+ * 3G 1001
+ * 3H 1001
+ * 4A 1001
+ * 4B 1001
+ */
+test('it should calculate the right retention data when all the activity is 1001', (t) => {
+    const now = new Date();
+    const activities = parseActivities(activities1001);
+    const result = getRetentionData(activities, now);
+
+    t.is(result.oneDay, 8);
+    t.is(result.twoDays, 2);
+});
+
+/*
+ * 1A    1111 X
+ * 1C    1111
+ * 1F    1011 X
+ * 3B  1001 X
+ * 3F  1010
+ * 4A 1001
+ * 4B 1100
+ */
+test('it should calculate the right retention data when some days there is no activities', (t) => {
+    const now = new Date();
+    const activities = parseActivities(activitiesNo2oDay);
+    const result = getRetentionData(activities, now);
+
+    t.is(result.oneDay, 4);
+    t.is(result.twoDays, 3);
 });
