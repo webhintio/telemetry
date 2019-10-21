@@ -93,13 +93,13 @@ test('it should calculate the right retention data for 4 days', (t) => {
 
 /*
  * 1A 1111 X
+ * 1B 1111 X
  * 1C 1111 X
- * 1F 1111 X
  * 2A 1111 X
- * 2C 1111 X
- * 2D 1111
+ * 2B 1111 X
+ * 2C 1111
+ * 3A 1111 X
  * 3B 1111 X
- * 3F 1111 X
  * 4A 1111
  * 4B 1111
  */
