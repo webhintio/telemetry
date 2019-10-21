@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "cache",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        },
+        {
+            "type": "func",
+            "command": "host start",
+            "problemMatcher": "$func-watch",
+            "isBackground": true,
+            "dependsOn": "npm build"
+        },
+        {
+            "type": "shell",
+            "label": "npm build",
+            "command": "npm run build",
+            "dependsOn": "npm install",
+            "problemMatcher": "$tsc"
+        },
+        {
+            "type": "shell",
+            "label": "npm install",
+            "command": "npm install"
+        },
+        {
+            "type": "shell",
+            "label": "npm prune",
+            "command": "npm prune --production",
+            "dependsOn": "npm build",
+            "problemMatcher": []
+        }
+    ]
+}
