@@ -17,7 +17,7 @@ query=customEvents
               and todatetime(customDimensions["lastUpdated"]) >= todatetime('%%startDate%%')
               and todatetime(customDimensions["lastUpdated"]) < todatetime('%%endDate%%')
             | project customDimensions`);
-const retentionEndpoint = cleanQuery(`https://api.applicationinsights.io/v1/apps/${process.env.APPID}/query? 
+const retentionEndpoint = cleanQuery(`https://api.applicationinsights.io/v1/apps/${process.env.APPID}/query?
 query=customEvents
       | where name == 'f12-retention'
       | sort by todatetime(customDimensions["date"]) desc
