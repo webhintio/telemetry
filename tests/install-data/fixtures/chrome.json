@@ -1,0 +1,169 @@
+{
+    "version": "0.6",
+    "status": "ok",
+    "sig": "810059606",
+    "table": {
+        "cols": [
+            {
+                "id": "date",
+                "label": "Date",
+                "type": "date",
+                "pattern": ""
+            },
+            {
+                "id": "gccemnpihkbgkdmoogenkbkckppadcagImpressionsAll",
+                "label": "Impressions",
+                "type": "number",
+                "pattern": "",
+                "p": {
+                    "item": "webhint",
+                    "metric": "Impressions",
+                    "source": "All Sources"
+                }
+            },
+            {
+                "id": "gccemnpihkbgkdmoogenkbkckppadcagInstallationsAll",
+                "label": "Installations",
+                "type": "number",
+                "pattern": "",
+                "p": {
+                    "item": "webhint",
+                    "metric": "Installations",
+                    "source": "All Sources"
+                }
+            }
+        ],
+        "rows": [
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,1)"
+                    },
+                    {
+                        "v": 41
+                    },
+                    {
+                        "v": 51
+                    }
+                ]
+            },
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,2)"
+                    },
+                    {
+                        "v": 18
+                    },
+                    {
+                        "v": 32
+                    }
+                ]
+            },
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,3)"
+                    },
+                    {
+                        "v": 84
+                    },
+                    {
+                        "v": 102
+                    }
+                ]
+            },
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,4)"
+                    },
+                    {
+                        "v": 34
+                    },
+                    {
+                        "v": 46
+                    }
+                ]
+            },
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,5)"
+                    },
+                    {
+                        "v": 12
+                    },
+                    {
+                        "v": 7
+                    }
+                ]
+            },
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,6)"
+                    },
+                    {
+                        "v": 18
+                    },
+                    {
+                        "v": 19
+                    }
+                ]
+            },
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,7)"
+                    },
+                    {
+                        "v": 33
+                    },
+                    {
+                        "v": 29
+                    }
+                ]
+            },
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,8)"
+                    },
+                    {
+                        "v": 45
+                    },
+                    {
+                        "v": 35
+                    }
+                ]
+            },
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,9)"
+                    },
+                    {
+                        "v": 84
+                    },
+                    {
+                        "v": 23
+                    }
+                ]
+            },
+            {
+                "c": [
+                    {
+                        "v": "Date(2019,9,10)"
+                    },
+                    {
+                        "v": 83
+                    },
+                    {
+                        "v": 21
+                    }
+                ]
+            }
+        ]
+    }
+}
