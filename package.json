@@ -13,7 +13,7 @@
   "description": "Package containing functions to calculated telemetry information.",
   "dependencies": {
     "applicationinsights": "^1.6.0",
-    "got": "^9.6.0"
+    "got": "^10.2.0"
   },
   "devDependencies": {
     "@azure/functions": "^1.0.3",
