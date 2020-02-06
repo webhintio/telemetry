@@ -33,9 +33,9 @@ steps:
 - task: AzureFunctionApp@1
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
-    azureSubscription: 'webhint-web'
+    azureSubscription: 'webhint-telemetry'
     appType: 'functionAppLinux'
-    appName: 'telemetryfunctions'
+    appName: 'webhint-telemetry'
     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     runtimeStack: 'DOCKER|microsoft/azure-functions-node8:2.0'
     appSettings: '-APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -RESULT_INSTRUMENTATION_KEY $(RESULT_INSTRUMENTATION_KEY) -APPID $(APPID) -X_API_KEY $(X_API_KEY) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -WEBSITE_ENABLE_SYNC_UPDATE_SITE $(WEBSITE_ENABLE_SYNC_UPDATE_SITE) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION) -WEBSITES_ENABLE_APP_SERVICE_STORAGE $(WEBSITES_ENABLE_APP_SERVICE_STORAGE) -WEBSITE_RUN_FROM_PACKAGE $(WEBSITE_RUN_FROM_PACKAGE)'
