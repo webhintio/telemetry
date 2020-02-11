@@ -1,0 +1,11 @@
+{
+  "bindings": [
+    {
+      "name": "processDailyDownloads",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 0 11 * * *"
+    }
+  ],
+  "scriptFile": "../dist/src/download-data/index.js"
+}
