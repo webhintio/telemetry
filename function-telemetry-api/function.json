@@ -1,0 +1,22 @@
+{
+  "disabled": false,
+  "bindings": [
+      {
+          "authLevel": "function",
+          "name": "req",
+          "type": "httpTrigger",
+          "direction": "in",
+          "route": "log",
+          "methods": [
+              "post"
+          ]
+      },
+      {
+          "name": "res",
+          "type": "http",
+          "direction": "out"
+      }
+  ],
+  "entryPoint": "run",
+  "scriptFile": "../dist/src/telemetry-api/index.js"
+}
