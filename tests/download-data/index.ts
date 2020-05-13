@@ -5,7 +5,7 @@ import { DownloadData } from '../../src/download-data/types';
 
 const loadScript = () => {
     const stubs = {
-        './analytics': {
+        '../common/analytics': {
             '@noCallThru': true,
             sendPendingData() {},
             trackEvent(type: string, data: DownloadData) {}
@@ -62,7 +62,7 @@ test('New data is logged', async (t) => {
         }
     ]);
 
-    const trackEventSpy = sinon.spy(stubs['./analytics'], 'trackEvent');
+    const trackEventSpy = sinon.spy(stubs['../common/analytics'], 'trackEvent');
 
     await downloadData({ log() {} } as any);
 
@@ -104,7 +104,7 @@ test('Nothing happens when data is current', async (t) => {
         }
     ]);
 
-    const trackEventSpy = sinon.spy(stubs['./analytics'], 'trackEvent');
+    const trackEventSpy = sinon.spy(stubs['../common/analytics'], 'trackEvent');
 
     await downloadData({ log() {} } as any);
 
