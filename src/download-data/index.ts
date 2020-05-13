@@ -2,7 +2,7 @@ import { AzureFunction, Context } from '@azure/functions';
 
 import { getLatestDownloads, getFirefoxDownloadData } from './api';
 import { getISODateString } from './utils';
-import { trackEvent, sendPendingData } from './analytics';
+import { trackEvent, sendPendingData } from '../common/analytics';
 import { f12DownloadEvent } from './types';
 
 const downloadData: AzureFunction = async function (context: Context, myTimer: any): Promise<void> {
