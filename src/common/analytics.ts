@@ -1,28 +1,50 @@
 import * as applicationinsights from 'applicationinsights';
+import * as http from 'https';
 
+const apiEndpointHostname = process.env.API_ENDPOINT_HOSTNAME!; // eslint-disable-line no-process-env
 const instrumentationKey = process.env.RESULT_INSTRUMENTATION_KEY!; // eslint-disable-line no-process-env
 
 applicationinsights.setup(instrumentationKey).start();
 
 const appInsightsClient = applicationinsights.defaultClient;
 
-const telemetryApiEndpoint = 'https://webhint-telemetry.azurewebsites.net/api/log';
-    let sendTimeout: any = null;
-    let telemetryQueue: any = [];
-    let options = {
-        batchDelay: 15000,
-        defaultProperties: {},
-    };
+let options = {
+    batchDelay: 15000,
+    defaultProperties: {},
+};
+let sendTimeout: any = null;
+let telemetryQueue: any = [];
 
-const post = async (url: string, data: any) => {
-    const response = await fetch(url, {
+const post = async (data: any) => {
+    const reqOptions = {
+        hostname: apiEndpointHostname,
+        port: 80,
+        path: '/api/log',
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
-        },
-        body: data
+          'Content-Type': 'application/json',
+          'Content-Length': data.length
+        }
+    };
+
+    const req = http.request(reqOptions, (res) => {
+        console.log(`statusCode: ${res.statusCode}`)
+
+        res.on('data', (d) => {
+            console.log(`BODY: ${d}`)
+        });
+
+        res.on('end', () => {
+            console.log('No more data in response.');
+        });
     });
-    return response;
+
+    req.on('error', (error) => {
+        console.error(error)
+    });
+
+    req.write(data);
+    req.end();
 };
 
 const sendTelemetry = async () => {
@@ -36,19 +58,14 @@ const sendTelemetry = async () => {
 
     telemetryQueue = [];
     try {
-        post(telemetryApiEndpoint, data)
-            .then(response => {
-                if (response.status !== 200) {
-                    console.warn('Failed to send telemetry: ', status);
-                }
-            });
+        await post(data);
     }
     catch (err) {
         console.warn('Failed to send telemetry: ', err);
     }
 };
 
-const addToQueue = async (type: string, data: any) => {
+const pushToQueue = async (type: string, data: any) => {
     telemetryQueue.push(
         {
             name: data.name,
@@ -71,7 +88,7 @@ const addToQueue = async (type: string, data: any) => {
  * @param properties - Properties to track.
  */
 export const trackEvent = async (name: string, properties: any) => {
-    await addToQueue('Event', { name, properties });
+    await pushToQueue('Event', { name, properties });
 };
 
 /**
