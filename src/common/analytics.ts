@@ -17,7 +17,7 @@ let telemetryQueue: any = [];
 const post = async () => {
     try {
         const response = await got.post(apiEndpointHostname, { json: telemetryQueue });
-        telemetryQueue = [];
+
         console.log(response.body);
     } catch (error) {
         console.warn(error.response.body);
@@ -29,9 +29,10 @@ const sendTelemetry = async () => {
         clearTimeout(sendTimeout);
         sendTimeout = null;
     }
-        telemetryQueue = [];
+
     try {
         await post();
+        telemetryQueue = [];
     } catch (err) {
         console.warn('Failed to send telemetry: ', err);
     }
