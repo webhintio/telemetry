@@ -16,9 +16,7 @@ let telemetryQueue: any = [];
 
 const post = async (data: any) => {
     try {
-        const response = await got.post(apiEndpointHostname, {
-            json: data
-        });
+        const response = await got.post(apiEndpointHostname, { json: data });
 
         console.log(response.body);
     } catch (error) {
@@ -31,15 +29,12 @@ const sendTelemetry = async () => {
         clearTimeout(sendTimeout);
         sendTimeout = null;
     }
-    const data = JSON.stringify({
-        data: telemetryQueue
-    });
+    const data = JSON.stringify({ data: telemetryQueue });
 
     telemetryQueue = [];
     try {
         await post(data);
-    }
-    catch (err) {
+    } catch (err) {
         console.warn('Failed to send telemetry: ', err);
     }
 };
@@ -49,14 +44,13 @@ const pushToQueue = async (type: string, data: any) => {
         {
             name: data.name,
             properties: Object.assign(Object.assign({}, options.defaultProperties), data.properties),
-            ver: 2,
-            type: `${type}Data`
+            type: `${type}Data`,
+            ver: 2
         }
     );
     if (!options.batchDelay) {
         await sendTelemetry();
-    }
-    else if (!sendTimeout) {
+    } else if (!sendTimeout) {
         sendTimeout = setTimeout(sendTelemetry, options.batchDelay);
     }
 };
