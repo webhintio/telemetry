@@ -14,13 +14,13 @@ const options = {
 let sendTimeout: any = null;
 let telemetryQueue: any = [];
 
-const post = async (data: any) => {
+const post = async () => {
     try {
-        const response = await got.post(apiEndpointHostname, { json: data });
-
+        const response = await got.post(apiEndpointHostname, { json: telemetryQueue });
+        telemetryQueue = [];
         console.log(response.body);
     } catch (error) {
-        console.log(error.response.body);
+        console.warn(error.response.body);
     }
 };
 
@@ -29,11 +29,9 @@ const sendTelemetry = async () => {
         clearTimeout(sendTimeout);
         sendTimeout = null;
     }
-    const data = JSON.stringify({ data: telemetryQueue });
-
-    telemetryQueue = [];
+        telemetryQueue = [];
     try {
-        await post(data);
+        await post();
     } catch (err) {
         console.warn('Failed to send telemetry: ', err);
     }
