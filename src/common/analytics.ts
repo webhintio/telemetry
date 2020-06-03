@@ -1,5 +1,5 @@
 import * as applicationinsights from 'applicationinsights';
-import * as http from 'https';
+import * as got from 'got';
 
 const apiEndpointHostname = process.env.API_ENDPOINT_HOSTNAME!; // eslint-disable-line no-process-env
 const instrumentationKey = process.env.RESULT_INSTRUMENTATION_KEY!; // eslint-disable-line no-process-env
@@ -7,44 +7,23 @@ const instrumentationKey = process.env.RESULT_INSTRUMENTATION_KEY!; // eslint-di
 applicationinsights.setup(instrumentationKey).start();
 
 const appInsightsClient = applicationinsights.defaultClient;
-
-let options = {
+const options = {
     batchDelay: 15000,
-    defaultProperties: {},
+    defaultProperties: {}
 };
 let sendTimeout: any = null;
 let telemetryQueue: any = [];
 
 const post = async (data: any) => {
-    const reqOptions = {
-        hostname: apiEndpointHostname,
-        port: 80,
-        path: '/api/log',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': data.length
-        }
-    };
-
-    const req = http.request(reqOptions, (res) => {
-        console.log(`statusCode: ${res.statusCode}`)
-
-        res.on('data', (d) => {
-            console.log(`BODY: ${d}`)
+    try {
+        const response = await got.post(apiEndpointHostname, {
+            json: data
         });
 
-        res.on('end', () => {
-            console.log('No more data in response.');
-        });
-    });
-
-    req.on('error', (error) => {
-        console.error(error)
-    });
-
-    req.write(data);
-    req.end();
+        console.log(response.body);
+    } catch (error) {
+        console.log(error.response.body);
+    }
 };
 
 const sendTelemetry = async () => {
