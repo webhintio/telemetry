@@ -12,7 +12,7 @@ const options = {
     defaultProperties: {}
 };
 let sendTimeout: any = null;
-let telemetryQueue: any = [];
+const telemetryQueue: any = [];
 
 const post = async (data: any) => {
     try {
@@ -32,6 +32,7 @@ const sendTelemetry = async () => {
 
     try {
         const data = telemetryQueue.splice(0);
+
         await post(data);
     } catch (err) {
         console.warn('Failed to send telemetry: ', err);
