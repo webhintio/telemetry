@@ -1,6 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 
-import { sendPendingData, trackEvent } from '../common/analytics';
+import { sendPendingData, addToAppInsights } from '../common/analytics';
 
 export const run: AzureFunction = async (context: Context, req: HttpRequest): Promise<void> => {
     context.log('Processing telemetry log request');
@@ -14,7 +14,7 @@ export const run: AzureFunction = async (context: Context, req: HttpRequest): Pr
 
     try {
         for (const telemetry of req.body.data) {
-            trackEvent(telemetry.name, telemetry.properties);
+            addToAppInsights(telemetry.name, telemetry.properties);
         }
 
         await sendPendingData();
