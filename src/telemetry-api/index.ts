@@ -14,7 +14,7 @@ export const run: AzureFunction = async (context: Context, req: HttpRequest): Pr
 
     try {
         for (const telemetry of req.body.data) {
-            addToAppInsights(telemetry.name, telemetry.properties);
+            addToAppInsights(telemetry.data.name, telemetry.data.properties, telemetry.data.measurements, telemetry.time);
         }
 
         await sendPendingData();

@@ -69,10 +69,12 @@ export const trackEvent = async (name: string, properties: any) => {
  * @param name - Event name.
  * @param properties - Properties to track.
  */
-export const addToAppInsights = (name: string, properties: any = {}) => {
+export const addToAppInsights = (name: string, properties: any = {}, measurements: any = {}, time: Date) => {
     appInsightsClient.trackEvent({
+        measurements,
         name,
-        properties
+        properties,
+        time
     });
 };
 

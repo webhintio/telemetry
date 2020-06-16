@@ -15,7 +15,7 @@
         },
         {
             "type": "func",
-            "command": "host start",
+            "command": "host start --cors *",
             "problemMatcher": "$func-watch",
             "isBackground": true,
             "dependsOn": "npm build"
