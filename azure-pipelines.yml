@@ -1,8 +1,8 @@
-# Scope the validations to master and PRs to master
+# Scope the validations to main and PRs to main
 trigger:
-- master
+- main
 pr:
-- master
+- main
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -18,10 +18,10 @@ steps:
   displayName: 'Build and run tests'
 # Remove devDependency before deploy to not upload them
 - script: npm prune --production
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   displayName: 'Remove devDependencies'
 - task: ArchiveFiles@2
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
     includeRootFolder: false
@@ -31,7 +31,7 @@ steps:
     verbose: true
   displayName: Create deployment zip file for azure functions
 - task: AzureFunctionApp@1
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   inputs:
     azureSubscription: 'webhint-telemetry'
     appType: 'functionAppLinux'
