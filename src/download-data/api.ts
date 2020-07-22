@@ -1,4 +1,4 @@
-import { get } from 'got';
+import got from 'got';
 import { f12DownloadEvent, AIResponseQuery, Browser, DownloadData, FirefoxDownloads } from './types';
 
 
@@ -23,7 +23,7 @@ export const getFirefoxDownloadData = async (startDate: Date, endDate: Date) => 
     const start = getDateString(startDate);
     const end = getDateString(endDate);
     const url = `https://addons.mozilla.org/en-US/firefox/addon/webhint/statistics/downloads-day-${start}-${end}.json`;
-    const data: FirefoxDownloads[] = (await get(url, { json: true })).body;
+    const data: FirefoxDownloads[] = await got.get(url).json();
 
     return data.map((entry) => {
         return {
@@ -38,11 +38,10 @@ export const getFirefoxDownloadData = async (startDate: Date, endDate: Date) => 
  * Return the latest download data we have in Application Insights
  */
 export const getLatestDownloads = async (browser: Browser): Promise<DownloadData | null> => {
-    const aiResponse: AIResponseQuery = (await get(downloadDataEndpoint, {
+    const aiResponse: AIResponseQuery = await got.get(downloadDataEndpoint, {
         headers: { 'x-api-key': process.env.X_API_KEY }, // eslint-disable-line no-process-env
-        json: true,
-        retry: { retries: 5 }
-    })).body;
+        retry: 5
+    }).json();
 
     const table = aiResponse.tables[0];
     const customDimensionsIndex = table.columns.findIndex((column) => {

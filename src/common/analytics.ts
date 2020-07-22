@@ -1,5 +1,5 @@
 import * as applicationinsights from 'applicationinsights';
-import * as got from 'got';
+import got from 'got';
 
 const apiEndpointHostname = process.env.API_ENDPOINT_HOSTNAME!; // eslint-disable-line no-process-env
 const instrumentationKey = process.env.RESULT_INSTRUMENTATION_KEY!; // eslint-disable-line no-process-env
