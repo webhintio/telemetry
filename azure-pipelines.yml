@@ -34,9 +34,9 @@ steps:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   inputs:
     azureSubscription: 'webhint-telemetry'
-    appType: 'functionAppLinux'
+    appType: 'functionApp'
     appName: 'webhint-telemetry'
     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    runtimeStack: 'NODE|10.14'
     appSettings: '-APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -RESULT_INSTRUMENTATION_KEY $(RESULT_INSTRUMENTATION_KEY) -APPID $(APPID) -X_API_KEY $(X_API_KEY) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -WEBSITE_ENABLE_SYNC_UPDATE_SITE $(WEBSITE_ENABLE_SYNC_UPDATE_SITE) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION) -WEBSITES_ENABLE_APP_SERVICE_STORAGE $(WEBSITES_ENABLE_APP_SERVICE_STORAGE) -WEBSITE_RUN_FROM_PACKAGE $(WEBSITE_RUN_FROM_PACKAGE)'
+    deploymentMethod: 'auto'
   displayName: Deploy telemetry functions
