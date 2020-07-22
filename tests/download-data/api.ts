@@ -11,7 +11,7 @@ const downloadsResponse: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(
 const downloadsEmptyResponse: AIResponseQuery = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'downloads-empty.json'), 'utf-8')); // eslint-disable-line no-sync
 
 type Request = {
-    get: (url: string) => Promise<any>;
+    get: (url: string) => { json: () => Promise<any> };
 }
 
 type APIContext = {
@@ -22,7 +22,7 @@ type APIContext = {
 const test = anyTest as TestInterface<APIContext>;
 
 const loadScript = (context: APIContext) => {
-    return proxyquire('../../src/download-data/api', { got: context.request });
+    return proxyquire('../../src/download-data/api', { got: { default: context.request }});
 };
 
 test.beforeEach((t) => {
@@ -40,7 +40,11 @@ test.afterEach((t) => {
 });
 
 test(`'getFirefoxDownloadData' will request the data in just one query`, async (t) => {
-    const requestStub = sinon.stub(t.context.request, 'get').resolves({ body: firefoxDownloadsResponse });
+    const requestStub = sinon.stub(t.context.request, 'get').returns({
+        json: () => {
+            return Promise.resolve(firefoxDownloadsResponse);
+        }
+    });
 
     const { getFirefoxDownloadData } = loadScript(t.context);
 
@@ -58,7 +62,11 @@ test(`'getFirefoxDownloadData' will request the data in just one query`, async (
 });
 
 test(`'getLatestDownloads' will return null if there is no data in App Insight`, async (t) => {
-    sinon.stub(t.context.request, 'get').resolves({ body: downloadsEmptyResponse });
+    sinon.stub(t.context.request, 'get').returns({
+        json: () => {
+            return Promise.resolve(downloadsEmptyResponse);
+        }
+    });
 
     const { getLatestDownloads } = loadScript(t.context);
 
@@ -70,7 +78,11 @@ test(`'getLatestDownloads' will return null if there is no data in App Insight`,
 });
 
 test(`'getLatestDownloads' will request the data in just one query`, async (t) => {
-    const requestGetStub = sinon.stub(t.context.request, 'get').resolves({ body: downloadsResponse });
+    const requestGetStub = sinon.stub(t.context.request, 'get').returns({
+        json: () => {
+            return Promise.resolve(downloadsResponse);
+        }
+    });
 
     const { getLatestDownloads } = loadScript(t.context);
 
