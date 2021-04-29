@@ -1,0 +1,14 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "04:00"
+    timezone: America/Los_Angeles
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: sinon
+    versions:
+    - 10.0.1
