@@ -12,7 +12,7 @@
   "version": "1.0.0",
   "description": "Package containing functions to calculated telemetry information.",
   "dependencies": {
-    "applicationinsights": "^2.0.0",
+    "applicationinsights": "^2.1.0",
     "got": "^11.8.2"
   },
   "devDependencies": {
